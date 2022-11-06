@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "aea754f2-ca2c-42cd-9f63-353513d97128",
+		"name": "BuilderStudio_Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23825498"
+	},
+	"item": [
+		{
+			"name": "Sign up",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//Random first name set\r",
+							"var fname= pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"pm.environment.set(\"firstname\", fname)\r",
+							"//Random email set\r",
+							"var setEmail= pm.environment.get(\"firstname\")+\"@yopmail.com\"\r",
+							"pm.environment.set(\"Email\", setEmail)\r",
+							"//Random number set\r",
+							"pm.variables.set (\"randomNum\", _.random (11111,99999));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify Status code is 200 after Sign up\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Status code name has string after Sign up\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Response time is less than 5000ms after Sign up\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Successful POST request after Sign up\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the Body matches string after Sign up\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"first_name\");\r",
+							"    pm.expect(pm.response.text()).to.include(\"email\");\r",
+							"    pm.expect(pm.response.text()).to.include(\"phone_number\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify FirstName after Sign up\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.expect(jsonData.user.first_name).to.eql(pm.environment.get(\"firstname\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Email after Sign up\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.expect(jsonData.user.email).to.eql(pm.environment.get(\"Email\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Authentication Code generate after Sign up\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.environment.set(\"signup_token\", jsonData.user.authtoken);\r",
+							"});\r",
+							"\r",
+							"var schema = {\r",
+							"    \"$schema\": \"https://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"title\": \"Root Schema\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"required\": [\r",
+							"        \"user\"\r",
+							"    ],\r",
+							"    \"additionalProperties\": true,\r",
+							"    \"properties\": {\r",
+							"        \"user\": {\r",
+							"            \"title\": \"The user Schema\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"required\": [\r",
+							"                \"first_name\",\r",
+							"                \"email\",\r",
+							"                \"phone_number\"                \r",
+							"            ],\r",
+							"            \"additionalProperties\": true,\r",
+							"            \"properties\": {\r",
+							"                \"first_name\": {\r",
+							"                    \"title\": \"The first_name Schema\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"email\": {\r",
+							"                    \"title\": \"The email Schema\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"phone_number\": {\r",
+							"                    \"title\": \"The phone_number Schema\",\r",
+							"                    \"type\": \"string\"\r",
+							"                }\r",
+							"            }\r",
+							"        }\r",
+							"    }\r",
+							"}\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test('Verify Schema Validation for Sign up', function () {\r",
+							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"//Set Email as Global for Sign in\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"signin_Email\", jsonData.user.email)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": {\r\n        \"first_name\": \"{{firstname}}\",\r\n        \"last_name\": \"\",\r\n        \"email\": \"{{Email}}\",\r\n        \"password\": \"Furious@01\",\r\n        \"phone_number\": \"+880-{{$randomPhoneNumber}}\",\r\n        \"user_type\": \"User\",\r\n        \"currency_id\": 1\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/users",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify Status code is 200 after Sign in\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Status code name has string after Sign in\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Response time is less than 1000ms after Sign in\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Successful POST request after Sign in\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the Body matches string after Sign in\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"first_name\");\r",
+							"    pm.expect(pm.response.text()).to.include(\"email\");\r",
+							"    pm.expect(pm.response.text()).to.include(\"phone_number\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify FirstName after Sign in\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.expect(jsonData.user.first_name).to.eql(pm.environment.get(\"firstname\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Email after Sign in\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.expect(jsonData.user.email).to.eql(pm.globals.get(\"signin_Email\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Authentication Code generate after Sign in\", function () {\r",
+							"    var jsonData= pm. response.json()\r",
+							"    pm.environment.set(\"signin_token\", jsonData.user.authtoken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{signin_Email}}\",\r\n    \"password\": \"Furious@01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/users/sign_in",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"sign_in"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "api-production-builder.engineer.ai",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,33 @@
+{
+	"id": "cc87282b-f93f-4d05-bf19-7181f079d0f7",
+	"name": "BuilderStudio_Project",
+	"values": [
+		{
+			"key": "firstname",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Email",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "signup_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "signin_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-10-29T06:44:05.814Z",
+	"_postman_exported_using": "Postman/10.0.40"
+}
